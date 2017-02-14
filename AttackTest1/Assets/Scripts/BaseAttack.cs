@@ -13,12 +13,12 @@ public class BaseAttack : MonoBehaviour {
 	public int hp = 100;
 	public int baseDamegeNum=10;
 	public float moveSpeed=5f;
-	private float distance_atk=2;
-	private Vector3 startEulerAngle;
-	private Vector3 startPos;
-	private Vector3 endPos;
-	private Vector3 targetPos;
-	private CharacterController cc;
+	protected float distance_atk=2;
+	protected Vector3 startEulerAngle;
+	protected Vector3 startPos;
+	protected Vector3 endPos;
+	protected Vector3 targetPos;
+	protected CharacterController cc;
 	public FightState state=FightState.Idle;
 
 	public float waitTime=2;
@@ -28,6 +28,7 @@ public class BaseAttack : MonoBehaviour {
 	public Transform attackTarget;
 
 	protected virtual void init(){
+		waitTime = Random.Range (0, 222)/100f;
 		cc = this.GetComponent<CharacterController> ();
 		startPos = transform.position;
 		startEulerAngle=transform.localEulerAngles;
@@ -39,7 +40,7 @@ public class BaseAttack : MonoBehaviour {
 		} else {
 			switch (state) {
 			case FightState.Idle:
-				if (BattleContle.Instance.waitRound) {
+				if (BattleContle.Instance.state==GameState.WaitRound) {
 					timmer += Time.deltaTime * moveSpeed;
 					if (timmer >= waitTime) {
 						FindAttackTarget ();
@@ -73,13 +74,14 @@ public class BaseAttack : MonoBehaviour {
 	/// </summary>
 	protected virtual void FindAttackTarget(){
 		state = FightState.Atk;
-		BattleContle.Instance.waitRound = false;
+
 	}
 
 	protected virtual void GetDamega(int demageNum){
 		if (hp > 0) {
 			hp -= demageNum;
 		}
+
 	}
 
 	protected void moveToPos(){
@@ -108,8 +110,9 @@ public class BaseAttack : MonoBehaviour {
 		} else {
 			isAtk = false;
 			state = FightState.Idle;
-			BattleContle.Instance.waitRound = true;
+
 			transform.localEulerAngles = startEulerAngle;
+			BattleContle.Instance.state = GameState.WaitRound;
 		}
 	}
 

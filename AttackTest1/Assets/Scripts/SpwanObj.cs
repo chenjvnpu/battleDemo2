@@ -7,21 +7,29 @@ public class SpwanObj : MonoBehaviour {
 	public Transform enemySpwanPoint;
 	public List<GameObject> playerList = new List<GameObject> ();
 	public List<GameObject> enemyList = new List<GameObject> ();
-
-	void Start () {
-		SpwanPlayer ();
-		StartCoroutine (SpwanPlayer());
-		StartCoroutine (SpwanEnemy());
+	bool isSpwaningPlayer=false;
+	bool isSpwaningEnemy=false;
+	public static SpwanObj Instance;
+	void Awake () {
+		Instance = this;
 	}
 	
 	// Update is called once per frame
 	void Update () {
-	
+		if(BattleContle.Instance.state==GameState.SpwanObj && !isSpwaningEnemy && !isSpwaningEnemy){
+			begainSpwanObj ();
+		}
+	}
+	void begainSpwanObj(){
+
+		StartCoroutine (SpwanPlayer());
+		StartCoroutine (SpwanEnemy());
 	}
 
 
 
 	IEnumerator SpwanPlayer(){
+		isSpwaningPlayer = true;
 		GameObject playerPrefab = Resources.Load<GameObject> ("Prefabs/player1");
 		yield return null;
 		int max = 9;
@@ -31,16 +39,21 @@ public class SpwanObj : MonoBehaviour {
 				index++;
 				if (index >max)
 					break;
-				Debug.Log (Constant.Formationx[j]+","+Constant.Formationy[i]);
+				//Debug.Log (Constant.Formationx[j]+","+Constant.Formationy[i]);
 				GameObject gob= Instantiate (playerPrefab, playerSpwanPoint.position+new Vector3(Constant.Formationx[j],0,Constant.Formationy[i]), Quaternion.identity) as GameObject;
 				gob.AddComponent<PlayerAttack> ();
 				playerList.Add (gob);
 				yield return new WaitForSeconds(1);
 			}
 		}
+		isSpwaningPlayer =false;
+		if(!isSpwaningEnemy && !isSpwaningPlayer){
+			BattleContle.Instance.state = GameState.WaitRound;
+		}
 	}
 
 	IEnumerator SpwanEnemy(){
+		isSpwaningEnemy = true;
 		GameObject enemyPrefab = Resources.Load<GameObject> ("Prefabs/enemy");
 		yield return null;
 		int max = 9;
@@ -50,12 +63,16 @@ public class SpwanObj : MonoBehaviour {
 				index++;
 				if (index >max)
 					break;
-				Debug.Log (Constant.Formationx[j]+","+Constant.Formationy[i]);
+				//Debug.Log (Constant.Formationx[j]+","+Constant.Formationy[i]);
 				GameObject gob= Instantiate (enemyPrefab, enemySpwanPoint.position+new Vector3(Constant.Formationx[j],0,-Constant.Formationy[i]), Quaternion.identity) as GameObject;
 				gob.AddComponent<EnemyAttack> ();
 				enemyList.Add (gob);
 				yield return new WaitForSeconds(1);
 			}
+		}
+		isSpwaningEnemy = false;
+		if(!isSpwaningEnemy && !isSpwaningPlayer){
+			BattleContle.Instance.state = GameState.WaitRound;
 		}
 	}
 }
