@@ -10,8 +10,23 @@ public class SpwanObj : MonoBehaviour {
 	bool isSpwaningPlayer=false;
 	bool isSpwaningEnemy=false;
 	public static SpwanObj Instance;
+	int maxPlayerNum=3;
+	int maxEnemyNum=4;
 	void Awake () {
 		Instance = this;
+	}
+
+	public void init(){
+		for (int i = 0; i < playerList.Count; i++) {
+			Destroy (playerList[i].gameObject);
+
+		}
+
+		for (int j = 0; j < enemyList.Count; j++) {
+			Destroy (enemyList[j].gameObject);
+		}
+		playerList.Clear();
+		enemyList.Clear();
 	}
 	
 	// Update is called once per frame
@@ -32,7 +47,7 @@ public class SpwanObj : MonoBehaviour {
 		isSpwaningPlayer = true;
 		GameObject playerPrefab = Resources.Load<GameObject> ("Prefabs/player1");
 		yield return null;
-		int max = 9;
+		int max = maxPlayerNum;
 		int index = 0;
 		for (int i = 0; i < 3; i++) {
 			for (int j = 0; j < 3; j++) {
@@ -56,7 +71,7 @@ public class SpwanObj : MonoBehaviour {
 		isSpwaningEnemy = true;
 		GameObject enemyPrefab = Resources.Load<GameObject> ("Prefabs/enemy");
 		yield return null;
-		int max = 9;
+		int max = maxEnemyNum;
 		int index = 0;
 		for (int i = 0; i < 3; i++) {
 			for (int j = 0; j < 3; j++) {

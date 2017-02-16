@@ -17,7 +17,15 @@ public class PlayerAttack : BaseAttack {
 	{
 		base.FindAttackTarget ();
 		BattleContle.Instance.state = GameState.PlayerRound;
-		attackTarget=SpwanObj.Instance.enemyList[Random.Range(0,SpwanObj.Instance.enemyList.Count)].transform;
+		int count = SpwanObj.Instance.enemyList.Count;
+		if (count > 0) {
+			attackTarget=SpwanObj.Instance.enemyList[Random.Range(0,SpwanObj.Instance.enemyList.Count)].transform;
+			endPos = attackTarget.position;
+		} else {
+			BattleContle.Instance.state = GameState.EndRound;
+			state = FightState.Idle;
+		}
+
 	}
 
 	protected override void GetDamega (int demageNum)
@@ -28,7 +36,7 @@ public class PlayerAttack : BaseAttack {
 			if(SpwanObj.Instance.playerList.Count<=0){
 				BattleContle.Instance.state = GameState.EndRound;
 			}
-
+			Destroy (this.gameObject);
 		}
 	}
 }

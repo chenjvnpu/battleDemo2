@@ -12,6 +12,7 @@ public class BattleContle : MonoBehaviour {
 	public static BattleContle Instance;
 	[HideInInspector]
 	public GameState state = GameState.SpwanObj;
+	int roundIndex=1;
 
 
 	// Use this for initialization
@@ -32,6 +33,7 @@ public class BattleContle : MonoBehaviour {
 		case GameState.EnemyRound:
 			break;
 		case GameState.EndRound:
+			PlayEndRound ();
 			break;
 		default:
 			break;
@@ -49,4 +51,17 @@ public class BattleContle : MonoBehaviour {
 
 
 	}
+
+	void PlayEndRound(){
+		if (roundIndex < 2) {
+			roundIndex++;
+			SpwanObj.Instance.init ();
+			state = GameState.SpwanObj;
+
+		} else {
+			Debug.Log ("game over");
+		}
+	}
+
+
 }

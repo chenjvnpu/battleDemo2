@@ -11,7 +11,7 @@ public enum FightState{
 public class BaseAttack : MonoBehaviour {
 
 	public int hp = 100;
-	public int baseDamegeNum=10;
+	public int baseDamegeNum=50;
 	public float moveSpeed=5f;
 	protected float distance_atk=2;
 	protected Vector3 startEulerAngle;
@@ -22,16 +22,19 @@ public class BaseAttack : MonoBehaviour {
 	public FightState state=FightState.Idle;
 
 	public float waitTime=2;
-	float timmer=0;
+	public float timmer=0;
 
-	bool isAtk=false;
+	bool isAtkFinish=false;
 	public Transform attackTarget;
 
 	protected virtual void init(){
-		waitTime = Random.Range (0, 222)/100f;
+		timmer=0;
+		waitTime = Random.Range (190, 200)/100f;
 		cc = this.GetComponent<CharacterController> ();
 		startPos = transform.position;
 		startEulerAngle=transform.localEulerAngles;
+//		System.Random r = new System.Random ();
+//		r.NextDouble ();
 	}
 
 	protected void OnUpdate(){
@@ -43,13 +46,14 @@ public class BaseAttack : MonoBehaviour {
 				if (BattleContle.Instance.state==GameState.WaitRound) {
 					timmer += Time.deltaTime * moveSpeed;
 					if (timmer >= waitTime) {
+						timmer = 0;
 						FindAttackTarget ();
 					}
 				}
 
 				break;
 			case FightState.Atk:
-				if (isAtk && attackTarget!=null) {//attack finish
+				if (isAtkFinish ) {//attack finish
 					MoveToBack ();
 				} else {//going attack
 					moveToPos ();
@@ -88,7 +92,8 @@ public class BaseAttack : MonoBehaviour {
 		
 			if (Vector3.Distance (transform.position, endPos) > distance_atk) {
 				transform.LookAt (endPos);
-				cc.SimpleMove (transform.forward * moveSpeed);
+				//cc.SimpleMove (transform.forward * moveSpeed);
+			transform.Translate(transform.forward*Time.deltaTime*moveSpeed,Space.World);
 			} else {
 				PlayAttack ();
 			}
@@ -97,18 +102,19 @@ public class BaseAttack : MonoBehaviour {
 	}
 
 	public virtual void PlayAttack(){
-		isAtk = true;
+		isAtkFinish = true;
 		if(attackTarget!=null){
 			attackTarget.GetComponent<BaseAttack> ().GetDamega (baseDamegeNum);
 		}
 	}
 
 	protected void MoveToBack(){
-		if (Vector3.Distance (transform.position, startPos) > 1f) {
+		if (Vector3.Distance (transform.position, startPos) > 0.1f) {
 			transform.LookAt (startPos);
-			cc.SimpleMove (transform.forward * moveSpeed);
+			//cc.SimpleMove (transform.forward * moveSpeed);
+			transform.Translate(transform.forward*Time.deltaTime*moveSpeed,Space.World);
 		} else {
-			isAtk = false;
+			isAtkFinish = false;
 			state = FightState.Idle;
 
 			transform.localEulerAngles = startEulerAngle;

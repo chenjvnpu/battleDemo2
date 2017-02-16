@@ -45,6 +45,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\NewBehaviourScript.cs" />
      <Compile Include="Assets\Scripts\BaseAttack.cs" />
      <Compile Include="Assets\Scripts\BattleContle.cs" />
      <Compile Include="Assets\Scripts\Constant.cs" />
