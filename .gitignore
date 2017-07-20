@@ -6,6 +6,6 @@
 *.sln
 *.suo
 *.userprefs
-battleDemo2/Library
-battleDemo2Temp
-battleDemo2/Documents
+AttackTest1/Library
+AttackTest1/Temp
+AttackTest1/Documents
