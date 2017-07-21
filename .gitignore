@@ -1,0 +1,11 @@
+#unity basic
+*.csproj
+*.unityproj
+*.booproj
+*.pidb
+*.sln
+*.suo
+*.userprefs
+AttackTest1/Library
+AttackTest1/Temp
+AttackTest1/Documents
